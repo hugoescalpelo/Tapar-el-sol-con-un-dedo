@@ -6,3 +6,11 @@ void setPinModes () {
   }  
 }
 
+void setInitials () {
+  for (byte i_in = 0; i_in < N_MOTORS; i_in++) {
+    digitalWrite (DIR [i_in], LOW);
+    digitalWrite (ENABLE [i_in], LOW);
+    digitalWrite (PIN [i_in], LOW);
+  }
+}
+

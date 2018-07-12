@@ -68,6 +68,7 @@ void setup () {
   Serial.println ("Setting Up");
 
   setPinModes ();
+  setInitials ();
 
   waitHandShake ();
 }

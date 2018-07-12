@@ -16,7 +16,7 @@ void stopAll () {
 void runAllTest () {
   timeNow = micros ();
   for (byte i_rn = 0; i_rn > N_MOTORS; i_rn++) {
-    if (timeNow >stepTimeTarget [i_rn]  && runMotor [i_rn]) {
+    if (timeNow >stepTimeTarget [i_rn]  && runMotor [i_rn] && enableMotor [i_rn]) {
       levelMotor [i_rn] = !levelMotor [i_rn];
       stepTimeTarget [i_rn] += stepMotorTime [i_rn];
       if (dirMotor [i_rn]) {
@@ -27,6 +27,14 @@ void runAllTest () {
       }
     }
   }
+ driveAll ();
+}
 
+void driveAll () {
+  for (byte i_da = 0; i_da < N_MOTORS; i_da++) {
+    digitalWrite (DIR [i_da], dirMotor [i_da]);
+    digitalWrite (ENABLE [i_da], enableMotor [i_da]);
+    digitalWrite (PIN [i_da], levelMotor [i_da]&runMotor [i_da]);
+  }
 }
 
