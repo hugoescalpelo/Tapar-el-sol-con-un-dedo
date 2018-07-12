@@ -9,7 +9,9 @@
    host is to cover the sun with a finger
 
    Changelog:
-   V0.1 BT intro menu & Serial communication
+   V0.1 BT handshake
+   V0.1.1 Motor decalration
+   V0.1.2 Test sequence
 
 
    Team
@@ -26,6 +28,7 @@
 
 //Constants
 const int HANDSHAKE_CODE = 1500;
+
 const byte PIN [] = {4, 5, 6, 7};
 const byte ENABLE [] = {8, 9, 10, 11};
 const byte DIR [] = {22, 24, 26, 28};
@@ -34,19 +37,31 @@ const byte RIGHT_MOTOR = 1;
 const byte FRONT_MOTOR = 2;
 const byte REAR_MOTOR = 3;
 const byte N_MOTORS = 4;
+
 const bool LEFT_DIR = 0;
 const bool RIGHT_DIR = 1;
-const long TIME_TESTEPS = 1500;
+const bool PULL_DIR = 1;
+const bool LOOSE_DIR = 0;
+const long TIME_TESTEPS = 1200;//Microseconds
 const bool ON = 1;
 const bool OFF = 0;
+const long TEST_STEPS = 1500;
+const int IBWTT = 500; //In Betweent Wait Test Time in Millis
 
 //Variables
 int buffBT;
 String rValueBT;
+
 bool dirMotor [] = {0, 0, 0, 0};
 long stepMotorTime [] = {0, 0, 0, 0};
 bool runMotor [] = {0, 0, 0, 0};
 long stepTimeTarget [] = {0, 0, 0, 0};
+bool enableMotor [] = {0, 0, 0, 0};
+
+long positionSteps [] = {0, 0, 0, 0};
+
+long timeNow;
+bool levelMotor [] = {0, 0, 0, 0};
 
 void setup () {
   Serial.begin (2000000);
