@@ -12,6 +12,7 @@
    V0.1 BT handshake
    V0.1.1 Motor decalration
    V0.1.2 Test sequence
+   V0.1.3 Menu added
 
 
    Team
@@ -71,9 +72,49 @@ void setup () {
   setInitials ();
 
   waitHandShake ();
+  waitTest ();
+
+  printMenu ();
 }
 
 void loop () {
-  //
+  readBT ();
+  buffBT = rValueBT.toInt ();
+  switch (buffBT) {
+    case 0:
+    printMenu ();
+    clean ();
+    break;
+    case 1:
+    testSequence ();
+    clean ();
+    break;
+    case 2:
+    //CalibrateMenu ();
+    clean ();
+    break;
+    case 3:
+    //coverSun ();
+    clean ();
+    break;
+    case 4:
+    //sensorMenu ();
+    clean ();
+    break;
+    case 5:
+    //motorMenu ();
+    clean ();
+    break;
+    case 6:
+    //enableToggleMenu ();
+    clean ();
+    break;
+    default:
+    Serial.println ("Try again");
+    Serial1.println ("Try Again");
+    printMenu ();
+    clean ();
+    break;
+  }
 }
 
