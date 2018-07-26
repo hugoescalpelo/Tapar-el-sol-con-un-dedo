@@ -1,7 +1,7 @@
 /*
    Ivan Abreu Studio.
 
-   12/07/2018
+   23/07/2018
 
    This code controls 4 stepper motors, and an absolute orientation sensor.
 
@@ -13,6 +13,9 @@
    V0.1.1 Motor decalration
    V0.1.2 Test sequence
    V0.1.3 Menu added
+   V0.1.4 Test sequence added
+   V0.1.5 Run all & drive all sequence Added
+   V0.1.6 BNO055 sensor Added
 
 
    Team
@@ -24,8 +27,10 @@
 */
 
 //Libraries
-
-//Objects
+#include <Wire.h>
+#include <Adafruit_Sensor.h>
+#include <Adafruit_BNO055.h>
+#include <utility/imumaths.h>
 
 //Constants
 const int HANDSHAKE_CODE = 1500;
@@ -49,6 +54,11 @@ const bool OFF = 0;
 const long TEST_STEPS = 1500;
 const int IBWTT = 500; //In Betweent Wait Test Time in Millis
 
+#define BNO055_SAMPLERATE_DELAY_MS (100)
+
+//Objects
+Adafruit_BNO055 bno = Adafruit_BNO055();
+
 //Variables
 int buffBT;
 String rValueBT;
@@ -59,22 +69,31 @@ bool runMotor [] = {0, 0, 0, 0};
 long stepTimeTarget [] = {0, 0, 0, 0};
 bool enableMotor [] = {0, 0, 0, 0};
 
-long positionSteps [] = {0, 0, 0, 0};
+long stepRegistry [] = {0, 0, 0, 0};
 
 long timeNow;
 bool levelMotor [] = {0, 0, 0, 0};
+
+long AOSensorTime;
+int buffMag;
+int heading;
+float azimuthSol;
+float altitudSol;
 
 void setup () {
   Serial.begin (2000000);
   Serial.println ("Setting Up");
 
+  Serial1.begin (9600);
+  Serial1.println ("BT started");
+
   setPinModes ();
   setInitials ();
 
   waitHandShake ();
-  waitTest ();
 
   printMenu ();
+  clean ();
 }
 
 void loop () {
@@ -82,39 +101,56 @@ void loop () {
   buffBT = rValueBT.toInt ();
   switch (buffBT) {
     case 0:
-    printMenu ();
-    clean ();
-    break;
+      printMenu ();
+      clean ();
+      break;
     case 1:
-    testSequence ();
-    clean ();
-    break;
+      Serial.println ("Test sequence in progreess");
+      Serial1.println ("Test sequence in progress");
+      testSequence ();
+      Serial.println ("Test sequence done");
+      Serial1.println ("Test Sequence Done");
+      clean ();
+      break;
     case 2:
-    //CalibrateMenu ();
-    clean ();
-    break;
+      Serial.println ("Begin Orientation Sensor");
+      Serial1.println ("Begin Orientation Sensor");
+      beginOrientationSensor ();
+      Serial.println ("Absolute Orientation Sensor started");
+      Serial1.println ("Absolute Orientation Sensor started");
+      clean ();
+      break;
     case 3:
-    //coverSun ();
-    clean ();
-    break;
+      Serial.println ("Calibrating Absolute Orientation Sensor");
+      Serial1.println ("Calibrating Absolute Orientation Sensor");
+      runUntilCalibrate ();
+      Serial.println (buffMag);
+      clean ();
+      Serial.println ("Compass Absolute Orientation Sensor calibrated");
+      Serial1.println ("Compass Absolute Orientation Sensor calibrated");
+      break;
     case 4:
-    //sensorMenu ();
-    clean ();
-    break;
+      Serial.println ("Running");
+      Serial1.println ("Running");
+      searchSun ();
+      Serial.print (":)");
+      Serial1.println (";");
+      clean ();
+      break;
     case 5:
-    //motorMenu ();
-    clean ();
-    break;
+      //motorMenu ();
+      clean ();
+      break;
     case 6:
-    //enableToggleMenu ();
-    clean ();
-    break;
+      //enableToggleMenu ();
+      clean ();
+      break;
     default:
-    Serial.println ("Try again");
-    Serial1.println ("Try Again");
-    printMenu ();
-    clean ();
-    break;
+      Serial.println ("Try again");
+      Serial1.println ("Try Again");
+      printMenu ();
+      clean ();
+      break;
   }
 }
 

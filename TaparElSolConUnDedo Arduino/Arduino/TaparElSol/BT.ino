@@ -4,6 +4,7 @@ void waitHandShake () {
     readBT ();
     buffBT = rValueBT.toInt ();
     if (buffBT == HANDSHAKE_CODE) {
+      Serial1.println ("Welcome");
       handShake = 1;
       clean ();
     }    
@@ -14,17 +15,6 @@ void readBT () {
   if (Serial1.available ()) {
     rValueBT = Serial1.readStringUntil ('\n');
     //printReceivedValues ();
-  }
-}
-
-void waitTest () {
-  bool test = 0;
-  while (test == 0) {
-    readBT ();
-    if (rValueBT == "test") {
-      testSequence ();
-      clean ();
-    }
   }
 }
 
