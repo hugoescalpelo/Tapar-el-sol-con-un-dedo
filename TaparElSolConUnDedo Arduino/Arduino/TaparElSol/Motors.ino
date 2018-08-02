@@ -15,7 +15,7 @@ void stopAll () {
 
 void runAll () {
   timeNow = micros ();
-  for (byte i_rn = 0; i_rn > N_MOTORS; i_rn++) {
+  for (byte i_rn = 0; i_rn < N_MOTORS; i_rn++) {
     if (timeNow >stepTimeTarget [i_rn]  && runMotor [i_rn] && enableMotor [i_rn]) {
       levelMotor [i_rn] = !levelMotor [i_rn];
       stepTimeTarget [i_rn] += stepMotorTime [i_rn];

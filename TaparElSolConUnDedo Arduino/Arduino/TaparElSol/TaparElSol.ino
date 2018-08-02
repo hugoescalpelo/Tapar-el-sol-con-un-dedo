@@ -16,6 +16,7 @@
    V0.1.4 Test sequence added
    V0.1.5 Run all & drive all sequence Added
    V0.1.6 BNO055 sensor Added
+   V0.1.7 Test & motor orientation fixed
 
 
    Team
@@ -38,20 +39,20 @@ const int HANDSHAKE_CODE = 1500;
 const byte PIN [] = {4, 5, 6, 7};
 const byte ENABLE [] = {8, 9, 10, 11};
 const byte DIR [] = {22, 24, 26, 28};
-const byte LEFT_MOTOR = 0;
-const byte RIGHT_MOTOR = 1;
-const byte FRONT_MOTOR = 2;
-const byte REAR_MOTOR = 3;
+const byte LEFT_MOTOR = 2;
+const byte RIGHT_MOTOR = 3;
+const byte FRONT_MOTOR = 0;
+const byte REAR_MOTOR = 1;
 const byte N_MOTORS = 4;
 
 const bool LEFT_DIR = 0;
 const bool RIGHT_DIR = 1;
 const bool PULL_DIR = 1;
 const bool LOOSE_DIR = 0;
-const long TIME_TESTEPS = 1200;//Microseconds
+const long TIME_TESTEPS = 3200;//Microseconds
 const bool ON = 1;
 const bool OFF = 0;
-const long TEST_STEPS = 1500;
+const long TEST_STEPS = 500;
 const int IBWTT = 500; //In Betweent Wait Test Time in Millis
 
 #define BNO055_SAMPLERATE_DELAY_MS (100)
@@ -146,9 +147,9 @@ void loop () {
       clean ();
       break;
     default:
-      Serial.println ("Try again");
-      Serial1.println ("Try Again");
-      printMenu ();
+      //Serial.println ("Try again");
+      //Serial1.println ("Try Again");
+      //printMenu ();
       clean ();
       break;
   }

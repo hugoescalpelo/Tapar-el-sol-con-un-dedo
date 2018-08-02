@@ -1,8 +1,9 @@
 void testSequence () {
-  stopAll ();
-  setHomeSteps ();
-
+  
+  
   //TurHead to the left
+  Serial1.println ("Turn head left");
+  stopAll ();
   setMotor (LEFT_MOTOR, PULL_DIR, TIME_TESTEPS, ON, ON);
   setMotor (RIGHT_MOTOR, LOOSE_DIR, TIME_TESTEPS, ON, ON);
   setMotor (FRONT_MOTOR, PULL_DIR, TIME_TESTEPS, OFF, ON);
@@ -10,10 +11,11 @@ void testSequence () {
   while (stepRegistry [LEFT_MOTOR] < TEST_STEPS) {
     runAll ();
   }
-  stopAll ();
-  delay (IBWTT);
 
   //Turn head to the right
+  stopAll ();
+  Serial1.println ("Turn head right");
+  delay (IBWTT);
   setMotor (LEFT_MOTOR, LOOSE_DIR, TIME_TESTEPS, ON, ON);
   setMotor (RIGHT_MOTOR, PULL_DIR, TIME_TESTEPS, ON, ON);
   setMotor (FRONT_MOTOR, PULL_DIR, TIME_TESTEPS, OFF, ON);
@@ -21,21 +23,23 @@ void testSequence () {
   while (stepRegistry [RIGHT_MOTOR] < TEST_STEPS) {
     runAll ();
   }
-  stopAll ();
-  delay (IBWTT);
 
-  //Center head horizontal
-  setMotor (LEFT_MOTOR, LOOSE_DIR, TIME_TESTEPS, ON, ON);
-  setMotor (RIGHT_MOTOR, PULL_DIR, TIME_TESTEPS, ON, ON);
+  //Back to center
+  stopAll ();
+  Serial1.println ("Turn head center");
+  delay (IBWTT);
+  setMotor (LEFT_MOTOR, PULL_DIR, TIME_TESTEPS, ON, ON);
+  setMotor (RIGHT_MOTOR, LOOSE_DIR, TIME_TESTEPS, ON, ON);
   setMotor (FRONT_MOTOR, PULL_DIR, TIME_TESTEPS, OFF, ON);
   setMotor (REAR_MOTOR, PULL_DIR, TIME_TESTEPS, OFF, ON);
-  while (stepRegistry [LEFT_MOTOR] == 0 && stepRegistry [RIGHT_MOTOR] == 0) {
+  while (stepRegistry [LEFT_MOTOR] < 0) {
     runAll ();
   }
+  
+  //Turn head down  
   stopAll ();
   delay (IBWTT);
-
-  //Turn head down
+  Serial1.println ("Turn head down");
   setMotor (LEFT_MOTOR, PULL_DIR, TIME_TESTEPS, OFF, ON);
   setMotor (RIGHT_MOTOR, PULL_DIR, TIME_TESTEPS, OFF, ON);
   setMotor (FRONT_MOTOR, PULL_DIR, TIME_TESTEPS, ON, ON);
@@ -43,10 +47,11 @@ void testSequence () {
   while (stepRegistry [FRONT_MOTOR] <= TEST_STEPS) {
     runAll ();
   }
-  stopAll ();
-  delay (IBWTT);
 
   //Turn head up
+  stopAll ();
+  delay (IBWTT);
+  Serial1.println ("Turn head up");
   setMotor (LEFT_MOTOR, PULL_DIR, TIME_TESTEPS, OFF, ON);
   setMotor (RIGHT_MOTOR, PULL_DIR, TIME_TESTEPS, OFF, ON);
   setMotor (FRONT_MOTOR, LOOSE_DIR, TIME_TESTEPS, ON, ON);
@@ -54,17 +59,20 @@ void testSequence () {
   while (stepRegistry [REAR_MOTOR] <= TEST_STEPS) {
     runAll ();
   }
-  stopAll ();
-  delay (IBWTT);
 
   //Center head vertical
+  stopAll ();
+  Serial1.println (stepRegistry [FRONT_MOTOR]);
+  delay (IBWTT);
+  Serial1.println ("Turn head center");
   setMotor (LEFT_MOTOR, PULL_DIR, TIME_TESTEPS, OFF, ON);
   setMotor (RIGHT_MOTOR, PULL_DIR, TIME_TESTEPS, OFF, ON);
-  setMotor (FRONT_MOTOR, LOOSE_DIR, TIME_TESTEPS, ON, ON);
-  setMotor (REAR_MOTOR, PULL_DIR, TIME_TESTEPS, ON, ON);
-  while (stepRegistry [FRONT_MOTOR] == 0 && stepRegistry [REAR_MOTOR] == 0) {
+  setMotor (FRONT_MOTOR, PULL_DIR, TIME_TESTEPS, ON, ON);
+  setMotor (REAR_MOTOR, LOOSE_DIR, TIME_TESTEPS, ON, ON);
+  while (stepRegistry [FRONT_MOTOR] < 0) {
     runAll ();
   }
+  Serial1.println (stepRegistry [FRONT_MOTOR]);
   stopAll ();
   delay (IBWTT);
 }
