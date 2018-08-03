@@ -19,6 +19,8 @@
    V0.1.7 Test & motor orientation fixed
    V0.1.8 Running termination condition fixed
    V0.1.9 Toggle Enable Motors added
+   V0.2 Azimuth motors tested
+   V0.3 Altitude motors tested. MPA reached (Minimum Product Available
 
 
    Team
@@ -97,6 +99,11 @@ int threshold = 3;
 bool closeEnoughAz;
 long runSample;
 long workingAzimuthTimeStep;
+int diferenccce;
+bool workingDirFront, workingDirRear;
+int altitudLeft;
+bool closeEnoughAl;
+long workingAltitudTimeStep;
 
 bool enableToggle = 0;
 

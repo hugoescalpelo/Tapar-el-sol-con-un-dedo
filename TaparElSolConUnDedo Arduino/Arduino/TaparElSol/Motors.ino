@@ -46,9 +46,17 @@ void motorDirective () {
     closeEnoughAz = OFF;
   }
 
+  if (altitudLeft > threshold) {
+    closeEnoughAl = ON;
+  }
+  else {
+    closeEnoughAl = OFF;
+  }
+
   setMotor (LEFT_MOTOR, workingDirLeft, workingAzimuthTimeStep, closeEnoughAz, ON);
   setMotor (RIGHT_MOTOR, workingDirRight, workingAzimuthTimeStep, closeEnoughAz, ON);
-
+  setMotor (FRONT_MOTOR, workingDirFront, workingAltitudTimeStep, closeEnoughAl, ON);
+  setMotor (REAR_MOTOR, workingDirRear, workingAltitudTimeStep, closeEnoughAl, ON);
   
 }
 

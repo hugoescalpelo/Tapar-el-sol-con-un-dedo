@@ -108,7 +108,7 @@ void searchSun () {
       if (timeNow > runSample) {
         parsePosition ();
         readAbsoluteOrientationSensor ();
-        shortestWayToAzimuth ();
+        shortestWayTo ();
         motorDirective ();
         speedGradient ();
         runSample += RUN_SAMPLE;
@@ -148,10 +148,11 @@ void parsePosition () {
   }
 }
 
-void shortestWayToAzimuth () {
-  diffference = azimuthSol - heading;
+void shortestWayTo () {
 
-if (diffference > 0 && diffference < 180) {
+  //////////////////////////////////azimuth
+  diffference = azimuthSol - heading;
+  if (diffference > 0 && diffference < 180) {
     workingDirLeft = LOOSE_DIR;
     workingDirRight = PULL_DIR;
   }
@@ -168,13 +169,37 @@ if (diffference > 0 && diffference < 180) {
     workingDirRight = PULL_DIR;
   }
   azimuthLeft = abs (diffference);
+
+  //////////////////////////////////altitude
+  diferenccce = altitudSol + tilting;
+  if (diferenccce > 0 && diferenccce < 180) {
+    workingDirFront = LOOSE_DIR;
+    workingDirRear = PULL_DIR;
+  }
+  else if (diferenccce > 181 && diferenccce - 360) {
+    workingDirFront = PULL_DIR;
+    workingDirRear = LOOSE_DIR;
+  }
+  else if (diferenccce < 0 && diferenccce > -180) {
+    workingDirFront = PULL_DIR;
+    workingDirRear = LOOSE_DIR;
+  }
+  else if (diferenccce < -181 && diferenccce > -360) {
+    workingDirFront = LOOSE_DIR;
+    workingDirRear = PULL_DIR;
+  }
+  altitudLeft = abs (diferenccce);
 }
 
 void speedGradient () {
   if (azimuthLeft > 180) {
     azimuthLeft = 360 - azimuthLeft;
   }
+  if (altitudLeft > 180) {
+    altitudLeft = 360 - altitudLeft;
+  }
   workingAzimuthTimeStep = map (azimuthLeft, -1, 181, 12000, 2800);
+  workingAltitudTimeStep = map (altitudLeft, -1, 181, 12000, 2800);
 }
 
 void enableToggleMenu () {
