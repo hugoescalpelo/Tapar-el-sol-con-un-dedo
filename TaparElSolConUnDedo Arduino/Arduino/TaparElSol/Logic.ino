@@ -1,6 +1,6 @@
 void testSequence () {
-  
-  
+ //delay (8000);
+
   //TurHead to the left
   Serial1.println ("Turn head left");
   stopAll ();
@@ -35,8 +35,8 @@ void testSequence () {
   while (stepRegistry [LEFT_MOTOR] < 0) {
     runAll ();
   }
-  
-  //Turn head down  
+
+  //Turn head down
   stopAll ();
   delay (IBWTT);
   Serial1.println ("Turn head down");
@@ -75,6 +75,7 @@ void testSequence () {
   Serial1.println (stepRegistry [FRONT_MOTOR]);
   stopAll ();
   delay (IBWTT);
+  enableToggle = 1;
 }
 
 void setHomeSteps () {
@@ -112,30 +113,62 @@ void readAbsoluteOrientationSensor () {
 }
 
 void searchSun () {
-  bool stopSearch = 0;
-  while (stopSearch == 0) {
+  stopSearch = 0;
+  reportData = millis ();
+  String endd = "end";
+  while (stopSearch != 1) {
     readBT ();
-    if (rValueBT == "end") {
+    timeNow = millis ();
+    if (timeNow > reportData) {
+      Serial.print (rValueBT);
+      Serial.print (" ");
+      Serial.print (reportData);
+      Serial.print (" ");
+      Serial.println (stopSearch);
+      reportData += 2000;
+    }
+    if (rValueBT.toInt () == -1) {
       stopSearch = 1;
+      Serial.println ("Terminador");
     }
     else {
       parsePosition ();
       machinePosition ();
+        //Serial.println ("worker");
     }
+    //clean ();
   }
 
 }
 
 void parsePosition () {
-  if (rValueBT != 'null') {
-    byte commaIndex = rValueBT.indexOf (',');
-    byte lennngth = rValueBT.length ();
-    azimuthSol = rValueBT.substring (0, commaIndex).toFloat ();
-    altitudSol = rValueBT.substring (commaIndex + 1, lennngth).toFloat ();
+  lastAz = azimuthSol;
+  lastAl = altitudSol;
+  byte commaIndex = rValueBT.indexOf (',');
+  byte lennngth = rValueBT.length ();
+  azimuthSol = rValueBT.substring (0, commaIndex).toFloat ();
+  altitudSol = rValueBT.substring (commaIndex + 1, lennngth).toFloat ();
+  if (lastAz != azimuthSol || lastAl != altitudSol) {
+
+
+    Serial.print (azimuthSol);
+    Serial.print (" ");
+    Serial.println (altitudSol);
+    Serial1.println (rValueBT);
+    //delay (1000);
+
   }
 }
 
 void machinePosition () {
   //
+}
+
+void enableToggleMenu () {
+  enableToggle = !enableToggle;
+  for (int i_tg = 0; i_tg < N_MOTORS; i_tg++) {
+    enableMotor [i_tg] = enableToggle;
+  }
+  driveAll ();
 }
 

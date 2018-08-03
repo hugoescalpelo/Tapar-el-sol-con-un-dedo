@@ -17,6 +17,8 @@
    V0.1.5 Run all & drive all sequence Added
    V0.1.6 BNO055 sensor Added
    V0.1.7 Test & motor orientation fixed
+   V0.1.8 Running termination condition fixed
+   V0.1.9 Toggle Enable Motors added
 
 
    Team
@@ -59,10 +61,11 @@ const int IBWTT = 500; //In Betweent Wait Test Time in Millis
 
 //Objects
 Adafruit_BNO055 bno = Adafruit_BNO055();
+String rValueBT;
 
 //Variables
 int buffBT;
-String rValueBT;
+//String rValueBT;
 
 bool dirMotor [] = {0, 0, 0, 0};
 long stepMotorTime [] = {0, 0, 0, 0};
@@ -78,8 +81,13 @@ bool levelMotor [] = {0, 0, 0, 0};
 long AOSensorTime;
 int buffMag;
 int heading;
-float azimuthSol;
-float altitudSol;
+bool stopSearch = 0;
+float azimuthSol = 0;
+float altitudSol = 0;
+float lastAz, lastAl;
+long reportData;
+
+bool enableToggle = 0;
 
 void setup () {
   Serial.begin (2000000);
@@ -143,7 +151,11 @@ void loop () {
       clean ();
       break;
     case 6:
-      //enableToggleMenu ();
+      enableToggleMenu ();
+      Serial.print ("All motors ");
+      Serial.println (enableToggle);
+      Serial1.print ("All Motors ");
+      Serial1.println (enableToggle);
       clean ();
       break;
     default:

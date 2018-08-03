@@ -12,6 +12,7 @@ void setInitials () {
     digitalWrite (ENABLE [i_in], LOW);
     digitalWrite (PIN [i_in], LOW);
   }
+  reportData = millis ();
   setHomeSteps ();
 }
 
