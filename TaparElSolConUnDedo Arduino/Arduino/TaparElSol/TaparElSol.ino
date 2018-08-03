@@ -57,6 +57,8 @@ const bool OFF = 0;
 const long TEST_STEPS = 500;
 const int IBWTT = 500; //In Betweent Wait Test Time in Millis
 
+const long RUN_SAMPLE = 50000;
+
 #define BNO055_SAMPLERATE_DELAY_MS (100)
 
 //Objects
@@ -81,11 +83,20 @@ bool levelMotor [] = {0, 0, 0, 0};
 long AOSensorTime;
 int buffMag;
 int heading;
+int tilting;
 bool stopSearch = 0;
 float azimuthSol = 0;
 float altitudSol = 0;
 float lastAz, lastAl;
 long reportData;
+
+int diffference;
+bool workingDirLeft, workingDirRight;
+int azimuthLeft;
+int threshold = 3;
+bool closeEnoughAz;
+long runSample;
+long workingAzimuthTimeStep;
 
 bool enableToggle = 0;
 
@@ -142,8 +153,8 @@ void loop () {
       Serial.println ("Running");
       Serial1.println ("Running");
       searchSun ();
-      Serial.print (":)");
-      Serial1.println (";");
+      Serial.println (";)");
+      Serial1.println (";)");
       clean ();
       break;
     case 5:

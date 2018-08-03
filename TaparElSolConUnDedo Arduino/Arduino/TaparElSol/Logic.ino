@@ -1,5 +1,5 @@
 void testSequence () {
- //delay (8000);
+  //delay (8000);
 
   //TurHead to the left
   Serial1.println ("Turn head left");
@@ -94,51 +94,39 @@ void runUntilCalibrate () {
   }
 }
 
-void readAbsoluteOrientationSensor () {
-  timeNow = millis ();
-  if (timeNow > AOSensorTime) {
-    //Get values
-    imu::Vector <3> euler = bno.getVector (Adafruit_BNO055::VECTOR_EULER);
-    heading = euler.x ();
-
-
-    //Calibration routine
-    uint8_t system, gyro, accel, mag = 0;
-    bno.getCalibration (&system, &gyro, &accel, &mag);
-
-    buffMag = mag;
-    //printABSensor ();
-    AOSensorTime += BNO055_SAMPLERATE_DELAY_MS;
-  }
-}
-
 void searchSun () {
   stopSearch = 0;
   reportData = millis ();
   String endd = "end";
   while (stopSearch != 1) {
     readBT ();
-    timeNow = millis ();
-    if (timeNow > reportData) {
-      Serial.print (rValueBT);
-      Serial.print (" ");
-      Serial.print (reportData);
-      Serial.print (" ");
-      Serial.println (stopSearch);
-      reportData += 2000;
-    }
     if (rValueBT.toInt () == -1) {
       stopSearch = 1;
       Serial.println ("Terminador");
     }
     else {
-      parsePosition ();
-      machinePosition ();
-        //Serial.println ("worker");
-    }
-    //clean ();
-  }
+      if (timeNow > runSample) {
+        parsePosition ();
+        readAbsoluteOrientationSensor ();
+        shortestWayToAzimuth ();
+        motorDirective ();
+        speedGradient ();
+        runSample += RUN_SAMPLE;
 
+        timeNow = millis ();
+        if (timeNow > reportData) {
+          Serial.print (azimuthLeft);
+          Serial.print (" ");
+          Serial.print (workingAzimuthTimeStep);
+          Serial.print (" ");
+          Serial.println (heading);
+          reportData += 200;
+        }
+      }
+
+      runAll ();
+    }
+  }
 }
 
 void parsePosition () {
@@ -160,8 +148,33 @@ void parsePosition () {
   }
 }
 
-void machinePosition () {
-  //
+void shortestWayToAzimuth () {
+  diffference = azimuthSol - heading;
+
+if (diffference > 0 && diffference < 180) {
+    workingDirLeft = LOOSE_DIR;
+    workingDirRight = PULL_DIR;
+  }
+  else if (diffference > 181 && diffference - 360) {
+    workingDirLeft = PULL_DIR;
+    workingDirRight = LOOSE_DIR;
+  }
+  else if (diffference < 0 && diffference > -180) {
+    workingDirLeft = PULL_DIR;
+    workingDirRight = LOOSE_DIR;
+  }
+  else if (diffference < -181 && diffference > -360) {
+    workingDirLeft = LOOSE_DIR;
+    workingDirRight = PULL_DIR;
+  }
+  azimuthLeft = abs (diffference);
+}
+
+void speedGradient () {
+  if (azimuthLeft > 180) {
+    azimuthLeft = 360 - azimuthLeft;
+  }
+  workingAzimuthTimeStep = map (azimuthLeft, -1, 181, 12000, 2800);
 }
 
 void enableToggleMenu () {

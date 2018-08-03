@@ -14,5 +14,7 @@ void setInitials () {
   }
   reportData = millis ();
   setHomeSteps ();
+  closeEnoughAz = ON;
+  runSample = micros ();
 }
 

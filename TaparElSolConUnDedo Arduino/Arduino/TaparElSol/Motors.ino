@@ -38,3 +38,17 @@ void driveAll () {
   }
 }
 
+void motorDirective () {
+  if (azimuthLeft > threshold) {
+    closeEnoughAz = ON;
+  }
+  else {
+    closeEnoughAz = OFF;
+  }
+
+  setMotor (LEFT_MOTOR, workingDirLeft, workingAzimuthTimeStep, closeEnoughAz, ON);
+  setMotor (RIGHT_MOTOR, workingDirRight, workingAzimuthTimeStep, closeEnoughAz, ON);
+
+  
+}
+
