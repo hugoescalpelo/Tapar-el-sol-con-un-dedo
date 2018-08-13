@@ -1,5 +1,11 @@
+//Test sequence, needed to check and probe the function of all motors
+//and discard programming problems vs wire connection problems.
+//Se sequence goes left, right, center; down, up, center.
+//This taste all motor conotrol, directions, timing and simbolyc
+//Manipulation of all working variables and functions
+
 void testSequence () {
-  //delay (8000);
+  //delay (1000);
 
   //TurHead to the left
   Serial1.println ("Turn head left");
